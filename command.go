@@ -60,23 +60,35 @@ func handleQuit(g *Game, args []string) error {
 }
 
 func handleMine(g *Game, args []string) error {
-	resource := "iron"
+	var resource string
 	if len(args) > 0 {
 		resource = args[0]
 	}
+
+	if resource == "" {
+		return fmt.Errorf("no resource specified")
+	}
+
 	g.world.Player.Mine(resource)
 	fmt.Printf("Mined %s! %s\n", resource, g.world.Player.Status())
 	return nil
 }
 
 func handleSell(g *Game, args []string) error {
-	if g.world.Player.iron > 0 {
-		g.world.Player.iron--
-		g.world.Player.money += 5
-		fmt.Printf("Sold 1 iron! %s\n", g.world.Player.Status())
-	} else {
-		fmt.Println("No iron to sell.")
+	var resource string
+	if len(args) > 0 {
+		resource = args[0]
 	}
+
+	if resource == "" {
+		return fmt.Errorf("no resource specified")
+	}
+
+	ammount_to_sell := g.world.Player.resources[resource]
+	g.world.Player.resources[resource] -= ammount_to_sell
+	g.world.Player.money += ammount_to_sell * 5
+	fmt.Printf("Sold %d %s! %s\n", ammount_to_sell, resource, g.world.Player.Status())
+
 	return nil
 }
 
