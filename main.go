@@ -7,6 +7,8 @@ import (
 func main() {
 	game := NewGame()
 
+	game.ExecuteCommand(Command{Name: "help"})
+
 	cmdChan := make(chan Command, 16)
 	go ReadCommands(cmdChan)
 
